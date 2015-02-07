@@ -1,8 +1,28 @@
 (function (canvasId) {
-    var canvas = {canvas: document.getElementById(canvasId)};
+	function safeSet(obj, src, key) {
+		if (src) {
+			obj[key] = src;
+		}
+	}
 
-    // TODO(MMD): Move turbolenz initialization into separate function.
-    TurbulenzEngine = WebGLTurbulenzEngine.create(canvas);
-       
-    var graphicsDevice = TurbulenzEngine.createGraphicsDevice({});
+	GameContext = {
+		"canvas": null,
+		"engine": null,
+		"gdc": null
+	}
+	
+	var canvas = {canvas: document.getElementById(canvasId)};
+	
+	if (canvas) {
+		GameContext["canvas"] = canvas;
+	}
+
+	TurbulenzEngine = WebGLTurbulenzEngine.create(canvas);
+	if (TurbulenzEngine) {
+		GameContext["engine"] = TurbulenzEngine;
+		var gdc = TurbulenzEngine.createGraphicsDevice({});
+		if (gdc) {
+			GameContext["gdc"] = gdc;
+		}
+	}
 })("mainCanvas");
