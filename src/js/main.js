@@ -1,8 +1,13 @@
 (function (canvasId) {
 	function safeSet(obj, src, key) {
-		if (src) {
-			obj[key] = src;
+		if (!obj) {
+			throw "safeSet(): obj must be specified";
 		}
+		if (!src) {
+			throw "safeSet(): src must be specified for assignment to obj";
+		}
+		
+		obj[key] = src;
 	}
 
 	GameContext = {
@@ -12,17 +17,10 @@
 	}
 	
 	var canvas = {canvas: document.getElementById(canvasId)};
-	
-	if (canvas) {
-		GameContext["canvas"] = canvas;
-	}
-
+	safeSet(GameContext, canvas, "canvas");
 	TurbulenzEngine = WebGLTurbulenzEngine.create(canvas);
-	if (TurbulenzEngine) {
-		GameContext["engine"] = TurbulenzEngine;
-		var gdc = TurbulenzEngine.createGraphicsDevice({});
-		if (gdc) {
-			GameContext["gdc"] = gdc;
-		}
-	}
+	safeSet(GameContext, TurbulenzEngine, "engine");
+	var gdc = TurbulenzEngine.createGraphicsDevice({});
+	safeSet(GameContext, gdc, "gdc")
+	
 })("mainCanvas");
