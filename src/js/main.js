@@ -1,4 +1,10 @@
-(function (canvasId) {
+var GameContext = (function (canvasId) {
+	var gameContext = {
+		"canvas": null,
+		"engine": null,
+		"gdc": null
+	}
+	
 	function safeSet(obj, src, key) {
 		if (!obj) {
 			throw "safeSet(): obj must be specified";
@@ -9,18 +15,18 @@
 		
 		obj[key] = src;
 	}
-
-	GameContext = {
-		"canvas": null,
-		"engine": null,
-		"gdc": null
+	// setup basic game context.
+	// TODO(mmdurrant) Refactor these in to private vars.
+	
+	function initContext(ctx) {
+		var canvas = {canvas: document.getElementById(canvasId)};
+		safeSet(ctx, canvas, "canvas");
+		TurbulenzEngine = WebGLTurbulenzEngine.create(canvas);
+		safeSet(ctx, TurbulenzEngine, "engine");
+		var gdc = TurbulenzEngine.createGraphicsDevice({});
+		safeSet(ctx, gdc, "gdc")
 	}
 	
-	var canvas = {canvas: document.getElementById(canvasId)};
-	safeSet(GameContext, canvas, "canvas");
-	TurbulenzEngine = WebGLTurbulenzEngine.create(canvas);
-	safeSet(GameContext, TurbulenzEngine, "engine");
-	var gdc = TurbulenzEngine.createGraphicsDevice({});
-	safeSet(GameContext, gdc, "gdc")
-	
+	initContext(gameContext)
+	return gameContext;
 })("mainCanvas");
